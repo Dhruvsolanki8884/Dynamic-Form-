@@ -1,16 +1,16 @@
 import React from "react";
-import { Circle } from 'lucide-react';
+import { Circle } from "lucide-react";
 
-const FieldDisplay = ({ field, onSelect, isSelected, onFormChange }) => {
+const FieldDisplay = ({ field, onSelect, isSelected }) => {
   const renderFieldInput = () => {
     switch (field.type) {
       case "input":
         return (
           <input
-            type={field.inputType || 'text'}
+            type={field.inputType || "text"}
             className="w-full p-2 border rounded"
             placeholder={field.placeholder}
-            onChange={(e) => onFormChange(e, field.dataName)}
+            disabled // Disable in edit mode
           />
         );
       case "checkbox":
@@ -21,7 +21,7 @@ const FieldDisplay = ({ field, onSelect, isSelected, onFormChange }) => {
                 <input
                   type="checkbox"
                   className="form-checkbox text-blue-600"
-                  onChange={(e) => onFormChange(e, `${field.dataName}_${index}`)}
+                  disabled // Disable in edit mode
                 />
                 <span className="text-gray-700">{option}</span>
               </label>
@@ -37,8 +37,7 @@ const FieldDisplay = ({ field, onSelect, isSelected, onFormChange }) => {
                   type="radio"
                   name={field.dataName}
                   className="form-radio text-blue-600"
-                  value={option}
-                  onChange={(e) => onFormChange(e, field.dataName)}
+                  disabled // Disable in edit mode
                 />
                 <span className="text-gray-700">{option}</span>
               </label>
@@ -47,12 +46,14 @@ const FieldDisplay = ({ field, onSelect, isSelected, onFormChange }) => {
         );
       case "dropdown":
         return (
-          <select 
+          <select
             className="w-full p-2 border rounded"
-            onChange={(e) => onFormChange(e, field.dataName)}
+            disabled // Disable in edit mode
           >
             {field.options.map((option, index) => (
-              <option key={index} value={option}>{option}</option>
+              <option key={index} value={option}>
+                {option}
+              </option>
             ))}
           </select>
         );
@@ -63,12 +64,15 @@ const FieldDisplay = ({ field, onSelect, isSelected, onFormChange }) => {
 
   return (
     <div
-      className={`bg-white p-6 rounded-lg shadow-sm border ${isSelected ? "border-blue-500" : "border-gray-200"} cursor-pointer`}
+      className={`bg-white p-6 rounded-lg shadow-sm border ${
+        isSelected ? "border-blue-500" : "border-gray-200"
+      } cursor-pointer`}
       onClick={() => onSelect(field)}
     >
       <div className="flex items-center justify-between mb-2">
         <label className="block text-md font-medium text-gray-700">
-          {field.label} {field.isRequired && <span className="text-red-500">*</span>}
+          {field.label}{" "}
+          {field.isRequired && <span className="text-red-500">*</span>}
         </label>
       </div>
       {renderFieldInput()}
